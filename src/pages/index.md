@@ -10,8 +10,6 @@ Learn how to get SOLalert.wtf set up in your project in under sixty seconds. {% 
 
 ## Quick start
 
-Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut pariatur. Sint ipsa praesentium dolor error cumque velit tenetur.
-
 ### Querying an address
 
 To determine whether a Solana address has been flagged, sanctioned, or inaccessible, make a HTTP GET request to the following endpoint:
