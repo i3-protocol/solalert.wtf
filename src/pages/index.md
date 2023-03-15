@@ -1,8 +1,14 @@
-# SOLalert.wtf
+---
+title: Getting started
+pageTitle: SOLalert.wtf - Never transact with sanctioned wallets on Solana
+description: SOLalert.wtf provides a list of sanctioned, lost, and hacked Solana addresses that allows dApp builders to protect their users.
+---
 
-Never transact with sanctioned wallets on Solana. Have access to a dynamic list of sanctioned, lost, and hacked Solana addresses that allows dApp builders to protect their users.
+Learn how to get SOLalert.wtf set up in your project in under sixty seconds. {% .lead %}
 
-## Getting started
+---
+
+## Quick start
 
 ### Querying an address
 
@@ -56,10 +62,6 @@ POST https://jij1fqp80j.execute-api.us-east-1.amazonaws.com/address
 Empty response body.
 
 ---
-
-## License
-
-MIT
 
 ## Getting help
 

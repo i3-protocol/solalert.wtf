@@ -1,0 +1,51 @@
+service: services
+frameworkVersion: '3'
+
+custom:
+  tableName: 'solalert-table-${sls:stage}'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - Fn::GetAtt: [ AlertTable, Arn ]
+  environment:
+    CHAINALYSIS_API_KEY: 3a4e16b7491e1f95cad91b6952dc1ed0614efe4abc22c7295c8961f2e0bcaf04
+    DDB_TABLE: ${self:custom.tableName}
+
+functions:
+  api:
+    handler: index.handler
+    events:
+      - httpApi: '*'
+
+resources:
+  Resources:
+    AlertTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: PK
+            AttributeType: S
+          - AttributeName: SK
+            AttributeType: S
+        KeySchema:
+          - AttributeName: PK
+            KeyType: HASH
+          - AttributeName: SK
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.tableName}
