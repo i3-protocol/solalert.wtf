@@ -1,48 +1,80 @@
-# Syntax
+# SOLalert.wtf
 
-Syntax is a [Tailwind UI](https://tailwindui.com) site template built using [Tailwind CSS](https://tailwindcss.com) and [Next.js](https://nextjs.org).
+Never transact with sanctioned wallets on Solana. Have access to a dynamic list of sanctioned, lost, and hacked Solana addresses that allows dApp builders to protect their users.
 
 ## Getting started
 
-To get started with this template, first install the npm dependencies:
+### Querying an address
 
-```bash
-npm install
-cp .env.example .env.local
+To determine whether a Solana address has been flagged, sanctioned, or inaccessible, make a HTTP GET request to the following endpoint:
+
+```curl
+GET https://jij1fqp80j.execute-api.us-east-1.amazonaws.com/address/<wallet_address>
 ```
 
-Next, run the development server:
+**200 Response**
 
-```bash
-npm run dev
+```json
+{
+    "wallet_address": "0x1da5821544e25c636c1417ba96ade4cf6d2f9b5a",
+    "identifications": [
+        {
+            "category": "sanctions",
+            "name": "SANCTIONS: OFAC SDN Secondeye Solution 2021-04-15 1da5821544e25c636c1417ba96ade4cf6d2f9b5a",
+            "description": "Pakistan-based Secondeye Solution (SES), also known as Forwarderz, is a synthetic identity document vendor that was added to the OFAC SDN list in April 2021.\n\nSES customers could buy fake identity documents to sign up for accounts with cryptocurrency exchanges, payment providers, banks, and more under false identities. According to the US Treasury Department, SES assisted the Internet Research Agency (IRA), the Russian troll farm that OFAC designated pursuant to E.O. 13848 in 2018 for interfering in the 2016 presidential election, in concealing its identity to evade sanctions.\n\nhttps://home.treasury.gov/news/press-releases/jy0126",
+            "url": "https://home.treasury.gov/news/press-releases/jy0126"
+        }
+    ]
+}
 ```
 
-Finally, open [http://localhost:3000](http://localhost:3000) in your browser to view the website.
+NOTE: If an address has no associated flags, `identifications` will be an empty array.
 
-## Customizing
+### File an address
 
-You can start editing this template by modifying the files in the `/src` folder. The site will auto-update as you edit these files.
+To submit a filing for a wallet address make the following HTTP request with the required request body. Please note that payment is required to submit a filing to prevent spam. All payments are made via Solana Pay.
 
-## Global search
-
-By default this template uses [Algolia DocSearch](https://docsearch.algolia.com) for the global search. DocSearch is free for open-source projects, and you can sign up for an account on their website. Once your DocSearch account is ready, update the following [environment variables](https://nextjs.org/docs/basic-features/environment-variables) in your project with the values provided by Algolia:
-
+```curl
+POST https://jij1fqp80j.execute-api.us-east-1.amazonaws.com/address
 ```
-NEXT_PUBLIC_DOCSEARCH_APP_ID=
-NEXT_PUBLIC_DOCSEARCH_API_KEY=
-NEXT_PUBLIC_DOCSEARCH_INDEX_NAME=
+
+**Request Body**
+
+```js
+{
+    "wallet_address": "<wallet_address>",
+    "network": 'SOL', // Default is 'SOL'
+     "category": 'sanctions', // Enum: ['sanctions', 'lost', 'hacked']
+     "name": "<category>: <issuer> <name/entity of owner> <date issued> <wallet_address>", // Psuedo-unique identifier for the filing; should include the category, name of the entity, and wallet address
+     "description": "...", // Brief description of the the filing
+     "url": '...' // Optional - Url where further information about this wallet address can be found, if not provided, will default to 'https://solalert.wtf'
+}
 ```
+
+**201 Response**
+
+Empty response body.
+
+---
 
 ## License
 
-This site template is a commercial product and is licensed under the [Tailwind UI license](https://tailwindui.com/license).
+MIT
 
-## Learn more
+## Getting help
 
-To learn more about the technologies used in this site template, see the following resources:
+Need help? We’re here for you. Please email us at [help+solalert@i3.insure](mailto:help+solalert@i3.insure) or [open an issue](github.com/i3-protocol/solalert.wtf/issues/new) on GitHub.
 
-- [Tailwind CSS](https://tailwindcss.com/docs) - the official Tailwind CSS documentation
-- [Next.js](https://nextjs.org/docs) - the official Next.js documentation
-- [Headless UI](https://headlessui.dev) - the official Headless UI documentation
-- [Markdoc](https://markdoc.io) - the official Markdoc documentation
-- [DocSearch](https://docsearch.algolia.com) - the official DocSearch documentation
+### Submit an issue
+
+To submit an issue, please [open an issue](github.com/i3-protocol/solalert.wtf/issues/new) on GitHub. Please include the following information: 
+
+  * The Solana address you're filing an issue for
+  * Do you own the Solana address?
+  * Are you appealing a false positive?
+  * Provide a description of the issue
+  * Have you recovered your Solana address?
+
+### Join the community
+
+Follow us on [Twitter](https://twitter.com/Crypto_i3) for the latest updates.
