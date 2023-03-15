@@ -6,8 +6,9 @@ const {
 } = require("@aws-sdk/lib-dynamodb");
 const express = require("express");
 const serverless = require("serverless-http");
+const axios = require("axios");
 const moment = require("moment");
-
+const cors = require("cors");
 
 const app = express();
 
@@ -16,6 +17,7 @@ const client = new DynamoDBClient();
 const dynamoDbClient = DynamoDBDocumentClient.from(client);
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/address/:addr", async function (req, res) {
   const params = {
@@ -54,7 +56,7 @@ app.get("/address/:addr", async function (req, res) {
 });
 
 app.post("/address", async function (req, res) {
-  const { wallet_address, network = 'SOL' } = req.body;
+  const { wallet_address, network = 'SOL', category, name, description, url = '' } = req.body;
   if (typeof wallet_address !== "string") {
     res.status(400).json({ error: '"wallet_address" must be a string' });
   } else if (typeof network !== "string") {
@@ -67,6 +69,10 @@ app.post("/address", async function (req, res) {
       PK: wallet_address,
       SK: 'Metadata',
       network,
+      category,
+      name,
+      description,
+      url,
       createdAt: moment().toISOString(),
       updatedAt: moment().toISOString(),
     },
